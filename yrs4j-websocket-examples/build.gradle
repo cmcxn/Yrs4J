@@ -1,0 +1,30 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'at.yrs4j'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':yrs4j-websocket')
+    implementation project(':yrs4j-native-linux')
+    implementation project(':yrs4j-native-windows')
+    implementation 'org.java-websocket:Java-WebSocket:1.5.4'
+    implementation 'com.google.code.gson:gson:2.10.1'
+}
+
+// Server example application
+application {
+    mainClass = 'at.yrs4j.websocket.examples.YWebSocketServerExample'
+}
+
+// Define additional tasks for running client examples
+task runClient(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'at.yrs4j.websocket.examples.YWebSocketClientExample'
+    args = ['ws://localhost:8080', 'demo-room']
+}

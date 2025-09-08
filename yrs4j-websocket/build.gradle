@@ -1,0 +1,47 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+group 'at.yrs4j'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    api project(':yrs4j-bindings')
+    implementation 'org.java-websocket:Java-WebSocket:1.5.4'
+    implementation 'com.google.code.gson:gson:2.10.1'
+    
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testImplementation project(':yrs4j-native-linux')
+    testImplementation project(':yrs4j-native-windows')
+}
+
+test {
+    useJUnitPlatform()
+}
+
+publishing {
+    repositories {
+        maven {
+            name = 'FFWNexus'
+            url = 'https://nexus.freie-fantasy-welt.de/repository/libs/'
+            credentials {
+                username = System.getenv("DEPLOYMENT_USER")
+                password = System.getenv("DEPLOYMENT_USER_PASSWD")
+            }
+        }
+    }
+
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            groupId = 'at.yrs4j'
+            artifactId = 'websocket'
+            version = project.websocketVersion
+        }
+    }
+}
